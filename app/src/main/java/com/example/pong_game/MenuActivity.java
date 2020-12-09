@@ -23,6 +23,7 @@ public class MenuActivity extends Activity {
     }
 
     public void startGame2Players(View view){
+        GameView.bot = false;
         Intent intent = new Intent(this, StartGame.class);
         startActivity(intent);
         finish();
@@ -30,8 +31,10 @@ public class MenuActivity extends Activity {
     }
 
     public void startGameSinglePlayer(View view){
-
-
+        GameView.bot = true;
+        Intent intent = new Intent(this, StartGame.class);
+        startActivity(intent);
+        finish();
     }
 
     public void riseScoreLimit(View view){

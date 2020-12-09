@@ -17,7 +17,7 @@ public class Paddle {
         paddleNumber = paddleNum;
         scoreLimit = 1;
         score = 0;
-        paddleVelocity = 5;
+        paddleVelocity = 3;
         paddleWidth = paddle.getWidth();
         paddleHeight = paddle.getHeight();
         paddleX = GameView.displayWidth/2 - paddleWidth/2;
@@ -41,7 +41,14 @@ public class Paddle {
         scoreLimit = limit;
     }
 
-    public void movePaddle(){
-
+    public void movePaddle(int x, int y){
+        if (x > (paddleX + paddleWidth/2))
+            paddleX += paddleVelocity;
+        if (x < (paddleX + paddleWidth/2))
+            paddleX -= paddleVelocity;
+        if(paddleX <= 0)
+            paddleX = 0;
+        if(paddleX + paddleWidth >= GameView.displayWidth)
+            paddleX = GameView.displayWidth - paddleWidth;
     }
 }
