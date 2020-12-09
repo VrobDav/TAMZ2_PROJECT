@@ -23,7 +23,8 @@
         android:layout_marginEnd="150dp"
         android:layout_marginRight="150dp"
         android:layout_marginBottom="375dp"
-        android:background="@drawable/play" />
+        android:background="@drawable/play"
+        android:onClick="openMenu"/>
 
     <ImageButton
         android:id="@+id/SettingsButton"
@@ -41,7 +42,8 @@
         android:layout_marginEnd="53dp"
         android:layout_marginRight="53dp"
         android:layout_marginBottom="197dp"
-        android:background="@drawable/settings" />
+        android:background="@drawable/settings"
+        android:onClick="openSettings"/>
 
     <ImageButton
         android:id="@+id/ScoreButton"
@@ -59,7 +61,8 @@
         android:layout_marginEnd="262dp"
         android:layout_marginRight="262dp"
         android:layout_marginBottom="199dp"
-        android:background="@drawable/trophy" />
+        android:background="@drawable/trophy"
+        android:onClick="openHighScore"/>
 
     <TextView
         android:id="@+id/textView"

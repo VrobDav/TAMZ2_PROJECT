@@ -23,7 +23,8 @@
         android:layout_marginEnd="294dp"
         android:layout_marginRight="294dp"
         android:layout_marginBottom="395dp"
-        android:background="@drawable/back_arrow" />
+        android:background="@drawable/back_arrow"
+        android:onClick="lowerScoreLimit"/>
 
     <ImageButton
         android:id="@+id/riseScoreButton"
@@ -41,7 +42,8 @@
         android:layout_marginEnd="53dp"
         android:layout_marginRight="53dp"
         android:layout_marginBottom="395dp"
-        android:background="@drawable/forward_arrow" />
+        android:background="@drawable/forward_arrow"
+        android:onClick="riseScoreLimit" />
 
     <ImageButton
         android:id="@+id/twoPlayersButton"
@@ -59,7 +61,8 @@
         android:layout_marginEnd="79dp"
         android:layout_marginRight="79dp"
         android:layout_marginBottom="222dp"
-        android:background="@drawable/play" />
+        android:background="@drawable/play"
+        android:onClick="startGame2Players"/>
 
     <TextView
         android:id="@+id/scoreLimitTextView"
@@ -137,7 +140,8 @@
         android:layout_marginEnd="272dp"
         android:layout_marginRight="272dp"
         android:layout_marginBottom="228dp"
-        android:background="@drawable/android_icon" />
+        android:background="@drawable/android_icon"
+        android:onClick="startGameSinglePlayer"/>
 
     <TextView
         android:id="@+id/textView9"
