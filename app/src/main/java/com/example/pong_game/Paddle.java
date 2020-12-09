@@ -41,7 +41,7 @@ public class Paddle {
         scoreLimit = limit;
     }
 
-    public void movePaddle(int x, int y){
+    public void movePaddle(int x){
         if (x > (paddleX + paddleWidth/2))
             paddleX += paddleVelocity;
         if (x < (paddleX + paddleWidth/2))

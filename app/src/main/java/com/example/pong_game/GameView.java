@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Insets;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Size;
@@ -32,8 +33,10 @@ public class GameView extends View {
     Paddle paddle1;
     Paddle paddle2;
     static boolean bot = false;
-    boolean sound = true;
+    static boolean sound = true;
     SharedPreferences preferences;
+    static MediaPlayer paddleHitSound;
+    MediaPlayer wallHitSound;
 
     public GameView(Context context) {
         super(context);
@@ -44,7 +47,7 @@ public class GameView extends View {
         if(backGround.equals("background1")){
             background = BitmapFactory.decodeResource(getResources(), R.drawable.background1);
         }
-        if(background.equals("background2")){
+        if(backGround.equals("background2")){
             background = BitmapFactory.decodeResource(getResources(), R.drawable.background2);
         }
         String Sound = preferences.getString("sound","");
@@ -55,6 +58,18 @@ public class GameView extends View {
             sound = false;
         }
 
+        paddleHitSound = MediaPlayer.create(context, R.raw.paddle_hit);
+        paddleHitSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+        wallHitSound = MediaPlayer.create(context, R.raw.wall_hit);
+        wallHitSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
 
         WindowMetrics windowMetrics = ((Activity) context).getWindowManager().getCurrentWindowMetrics();
         Insets insets = windowMetrics.getWindowInsets()
@@ -85,8 +100,11 @@ public class GameView extends View {
         for (int a = 0; a < num; a++) {
             int x = (int) event.getX(event.getPointerId(a));
             int y = (int) event.getY(event.getPointerId(a));
-            if(y < displayHeight/2)  paddle1.movePaddle(x, y);
-            if(y > displayHeight/2)  paddle2.movePaddle(x, y);
+            if(!bot)
+                if(y < displayHeight/2)
+                    paddle1.movePaddle(x);
+            if(y > displayHeight/2)
+                paddle2.movePaddle(x);
         }
         return true;
     }
@@ -110,11 +128,18 @@ public class GameView extends View {
         ball.ballY += ball.ballVelocityY;
         if (ball.ballX < 5) {
             ball.ballVelocityX = -ball.ballVelocityX;
+            if(sound)
+                wallHitSound.start();
         }
         if ((ball.ballX + ball.getWidth()) > displayWidth - 5) {
             ball.ballVelocityX = -ball.ballVelocityX;
-        }
+            if(sound)
+                wallHitSound.start();
 
+        }
+        if(bot){
+            paddle1.movePaddle(ball.ballX);
+        }
         ball.paddleCollision(paddle1, paddle2);
 
         handler.postDelayed(runnable, UPDATE_MILLIS);

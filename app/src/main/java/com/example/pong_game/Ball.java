@@ -59,7 +59,7 @@ public class Ball {
         ballVelocityY = -1 + random.nextInt(2);
         if(ballVelocityY == 0)
             ballVelocityY = 1;
-        ballVelocityX = -2 + random.nextInt(4);
+        ballVelocityX = -3 + random.nextInt(6);
         if(ballVelocityX == 0)
             ballVelocityX = 1;
         paddleHitCount = 0;
@@ -72,9 +72,11 @@ public class Ball {
                 ballY = pad1.paddleY + pad1.getHeight();
                 paddleHitCount++;
                 ballVelocityY = 1 + (paddleHitCount / 3);
-                ballVelocityX = -2 + random.nextInt(4);
+                ballVelocityX = -3 + random.nextInt(6);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
+                if(GameView.sound)
+                    GameView.paddleHitSound.start();
             }
         }
         else if(ballY <= 0) {
@@ -88,9 +90,11 @@ public class Ball {
                 ballY = pad2.paddleY + getHeight();
                 paddleHitCount++;
                 ballVelocityY = - 1 - (paddleHitCount / 3);
-                ballVelocityX = -2 + random.nextInt(4);
+                ballVelocityX = -3 + random.nextInt(6);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
+                if(GameView.sound)
+                    GameView.paddleHitSound.start();
             }
         }
         else if(ballY >= GameView.displayHeight) {
