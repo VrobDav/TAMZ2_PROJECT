@@ -23,7 +23,8 @@
         android:layout_marginEnd="147dp"
         android:layout_marginRight="147dp"
         android:layout_marginBottom="375dp"
-        android:background="@drawable/play"
+        android:background="@android:color/transparent"
+        android:src="@drawable/play"
         android:onClick="openMenu" />
 
     <ImageButton
@@ -42,7 +43,8 @@
         android:layout_marginEnd="53dp"
         android:layout_marginRight="53dp"
         android:layout_marginBottom="197dp"
-        android:background="@drawable/settings"
+        android:background="@android:color/transparent"
+        android:src="@drawable/settings"
         android:onClick="openSettings"/>
 
     <ImageButton
@@ -61,7 +63,8 @@
         android:layout_marginEnd="262dp"
         android:layout_marginRight="262dp"
         android:layout_marginBottom="199dp"
-        android:background="@drawable/trophy"
+        android:background="@android:color/transparent"
+        android:src="@drawable/trophy"
         android:onClick="openHighScore"/>
 
     <TextView

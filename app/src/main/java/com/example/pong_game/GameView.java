@@ -28,6 +28,9 @@ public class GameView extends View {
     Runnable runnable;
     final long UPDATE_MILLIS = 30;
     Ball ball;
+    Paddle paddle1;
+    Paddle paddle2;
+    boolean bot;
 
     public GameView(Context context) {
         super(context);
@@ -41,6 +44,8 @@ public class GameView extends View {
 
         rect = new Rect(0,0, displayWidth, displayHeight);
 
+        paddle1 = new Paddle(context, 1);
+        paddle2 = new Paddle(context, 2);
         ball = new Ball(context);
 
         handler = new Handler(Looper.getMainLooper());
@@ -59,11 +64,15 @@ public class GameView extends View {
 
         canvas.drawBitmap(background, null, rect, null);
 
+        canvas.drawBitmap(paddle1.paddle, paddle1.paddleX, paddle1.paddleY, null);
+        canvas.drawBitmap(paddle2.paddle, paddle2.paddleX, paddle2.paddleY, null);
         canvas.drawBitmap(ball.getBitmap(), ball.ballX, ball.ballY, null);
         ball.ballFrame++;
         if(ball.ballFrame > 15){
             ball.ballFrame = 0;
         }
+
+
         ball.ballX += ball.ballVelocityX;
         ball.ballY += ball.ballVelocityY;
         if (ball.ballX < 5) {
@@ -72,6 +81,8 @@ public class GameView extends View {
         if ((ball.ballX + ball.getWidth()) > displayWidth - 5) {
             ball.ballVelocityX = -ball.ballVelocityX;
         }
+
+        ball.paddleCollision(paddle1, paddle2);
 
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }

@@ -11,7 +11,7 @@ public class Ball {
     Bitmap ball[] = new Bitmap[16];
     int ballX, ballY, ballVelocityX, ballVelocityY, ballFrame, ballWidth;
     private Random random;
-    int count;
+    int paddleHitCount;
 
     public Ball(Context context){
         ball[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ball0);
@@ -32,14 +32,12 @@ public class Ball {
         ball[15] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ball15);
 
         ballWidth = ball[0].getWidth();
-        ballVelocityX = 3;
-        ballVelocityY = 3;
-        ballX = GameView.displayWidth/2 + ballWidth/2;
-        ballY = GameView.displayHeight/2 + ballWidth/2;
         ballFrame = 0;
 
+
+
         random = new Random();
-        count = 0;
+        spawn();
     }
 
     public Bitmap getBitmap(){
@@ -64,7 +62,41 @@ public class Ball {
         ballVelocityX = -2 + random.nextInt(4);
         if(ballVelocityX == 0)
             ballVelocityX = 1;
-        count = 0;
+        paddleHitCount = 0;
+
+    }
+
+    public void paddleCollision(Paddle pad1, Paddle pad2){
+        if (ballY <= (pad1.paddleY + pad1.getHeight()) && (ballY + getHeight()/2) >= pad1.paddleY) {
+            if((ballX + getWidth()/2) >= pad1.paddleX && (ballX + getWidth()/2) <= (pad1.paddleX + pad1.getWidth())){
+                ballY = pad1.paddleY + pad1.getHeight();
+                paddleHitCount++;
+                ballVelocityY = 1 + (paddleHitCount / 3);
+                ballVelocityX = -2 + random.nextInt(4);
+                if (ballVelocityX == 0)
+                    ballVelocityX = 1;
+            }
+        }
+        else if(ballY <= 0) {
+            pad2.score++;
+            spawn();
+        }
+
+
+        if ((ballY + getHeight() )>= pad2.paddleY && (ballY + getHeight()/2) <= (pad2.paddleY + pad2.getHeight())) {
+            if((ballX + getWidth()/2) >= pad2.paddleX && (ballX + getWidth()/2) <= (pad2.paddleX + pad2.getWidth())){
+                ballY = pad2.paddleY + getHeight();
+                paddleHitCount++;
+                ballVelocityY = - 1 - (paddleHitCount / 3);
+                ballVelocityX = -2 + random.nextInt(4);
+                if (ballVelocityX == 0)
+                    ballVelocityX = 1;
+            }
+        }
+        else if(ballY >= GameView.displayHeight) {
+            pad1.score++;
+            spawn();
+        }
 
     }
 }
