@@ -4,9 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.util.Random;
+
+
 public class Ball {
     Bitmap ball[] = new Bitmap[16];
-    int ballX, ballY, ballVelocity, ballFrame, ballWidth;
+    int ballX, ballY, ballVelocityX, ballVelocityY, ballFrame, ballWidth;
+    private Random random;
+    int count;
 
     public Ball(Context context){
         ball[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ball0);
@@ -27,6 +32,39 @@ public class Ball {
         ball[15] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ball15);
 
         ballWidth = ball[0].getWidth();
+        ballVelocityX = 3;
+        ballVelocityY = 3;
+        ballX = GameView.displayWidth/2 + ballWidth/2;
+        ballY = GameView.displayHeight/2 + ballWidth/2;
+        ballFrame = 0;
+
+        random = new Random();
+        count = 0;
+    }
+
+    public Bitmap getBitmap(){
+        return ball[ballFrame];
+    }
+
+    public int getWidth(){
+        return ball[0].getWidth();
+    }
+
+    public int getHeight(){
+        return ball[0].getHeight();
+    }
+
+    public void spawn(){
+        ballX = GameView.displayWidth/2 + ballWidth/2;
+        ballY = GameView.displayHeight/2 + ballWidth/2;
+
+        ballVelocityY = -1 + random.nextInt(2);
+        if(ballVelocityY == 0)
+            ballVelocityY = 1;
+        ballVelocityX = -2 + random.nextInt(4);
+        if(ballVelocityX == 0)
+            ballVelocityX = 1;
+        count = 0;
 
     }
 }
