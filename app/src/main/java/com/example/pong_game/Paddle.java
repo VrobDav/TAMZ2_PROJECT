@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class Paddle {
-    static int scoreLimit;
+
     Bitmap paddle;
     int paddleVelocity;
     int paddleX, paddleY, paddleWidth, paddleHeight;
@@ -15,7 +15,6 @@ public class Paddle {
     public Paddle(Context context, int paddleNum){
         paddle = BitmapFactory.decodeResource(context.getResources(), R.drawable.paddle);
         paddleNumber = paddleNum;
-        scoreLimit = 1;
         score = 0;
         paddleVelocity = 3;
         paddleWidth = paddle.getWidth();
@@ -37,9 +36,7 @@ public class Paddle {
         return paddle.getHeight();
     }
 
-    public static void setScoreLimit(int limit){
-        scoreLimit = limit;
-    }
+
 
     public void movePaddle(int x){
         if (x > (paddleX + paddleWidth/2))

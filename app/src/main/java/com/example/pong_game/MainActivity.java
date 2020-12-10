@@ -32,7 +32,8 @@ public class MainActivity extends Activity {
     }
 
     public void openHighScore(View view){
-
+        Intent intent = new Intent(this, HighScoreActivity.class);
+        startActivity(intent);
 
     }
 }

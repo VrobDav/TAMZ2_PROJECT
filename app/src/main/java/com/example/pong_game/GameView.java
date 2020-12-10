@@ -2,6 +2,7 @@ package com.example.pong_game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.os.Handler;
 
 public class GameView extends View {
 
+    static int scoreLimit = 1;
     Bitmap background;
     Rect rect;
     static int displayHeight, displayWidth;
@@ -37,6 +39,7 @@ public class GameView extends View {
     SharedPreferences preferences;
     static MediaPlayer paddleHitSound;
     MediaPlayer wallHitSound;
+
 
     public GameView(Context context) {
         super(context);
@@ -83,6 +86,7 @@ public class GameView extends View {
         paddle2 = new Paddle(context, 2);
         ball = new Ball(context);
 
+
         handler = new Handler(Looper.getMainLooper());
         runnable = new Runnable() {
             @Override
@@ -93,7 +97,11 @@ public class GameView extends View {
         };
     }
 
+    public static void setScoreLimit(int limit){
+        scoreLimit = limit;
+    }
     @Override
+
     public boolean onTouchEvent(MotionEvent event)
     {
         int num = event.getPointerCount();
@@ -141,8 +149,34 @@ public class GameView extends View {
             paddle1.movePaddle(ball.ballX);
         }
         ball.paddleCollision(paddle1, paddle2);
+        if(!bot)
+            checkWinner(paddle1, paddle2);
 
         handler.postDelayed(runnable, UPDATE_MILLIS);
+    }
+
+    public void checkWinner(Paddle pad1, Paddle pad2){
+         if(pad1.score == scoreLimit){
+             Intent intent = new Intent(getContext(), WinnerActivity.class);
+             intent.putExtra("player", "Player 1");
+             getContext().startActivity(intent);
+
+         }
+         if(pad2.score == scoreLimit){
+             Intent intent = new Intent(getContext(), WinnerActivity.class);
+             intent.putExtra("player", "Player 2");
+             getContext().startActivity(intent);
+
+         }
+    }
+
+    public void checkBotWin(Paddle pad1, Paddle pad2){
+        if(pad1.score >= 1){
+            Intent intent = new Intent(getContext(), WinnerActivity.class);
+            intent.putExtra("score", pad2.score);
+            getContext().startActivity(intent);
+
+        }
     }
 
 

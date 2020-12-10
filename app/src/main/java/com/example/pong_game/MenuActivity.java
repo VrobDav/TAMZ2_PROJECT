@@ -19,7 +19,7 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
 
         scoreLimitTextView = findViewById(R.id.scoreLimitTextView);
-        scoreLimitTextView.setText('1');
+        scoreLimitTextView.setText("1");
     }
 
     public void startGame2Players(View view){
@@ -44,7 +44,7 @@ public class MenuActivity extends Activity {
             currentLimit = 100;
         }
         scoreLimitTextView.setText(String.valueOf(currentLimit));
-        Paddle.setScoreLimit(currentLimit);
+        GameView.setScoreLimit(currentLimit);
     }
 
     public void lowerScoreLimit(View view){
@@ -54,7 +54,7 @@ public class MenuActivity extends Activity {
             currentLimit = 1;
         }
         scoreLimitTextView.setText(String.valueOf(currentLimit));
-        Paddle.setScoreLimit(currentLimit);
+        GameView.setScoreLimit(currentLimit);
 
     }
 }    
