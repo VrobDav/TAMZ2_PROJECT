@@ -13,12 +13,18 @@ public class botEndActivity extends Activity {
     private DBHelper mydb;
     TextView score;
     TextView name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bot_end);
         score = findViewById(R.id.scoreTextView);
         name = findViewById(R.id.playerNameTextView);
+        mydb = new DBHelper(this);
+        Intent i = getIntent();
+        String scoreS = i.getStringExtra("score");
+
+        score.setText(scoreS);
     }
 
     public void goToMenu(View view){
@@ -26,6 +32,8 @@ public class botEndActivity extends Activity {
         startActivity(intent);
         finish();
     }
+
+
 
     public void postScore(View view){
         if(mydb.insertItem(name.getText().toString(), Integer.parseInt(score.getText().toString()))) {

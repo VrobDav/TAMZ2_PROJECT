@@ -1,8 +1,10 @@
 package com.example.pong_game;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 
 import java.util.Random;
 
@@ -12,6 +14,7 @@ public class Ball {
     int ballX, ballY, ballVelocityX, ballVelocityY, ballFrame, ballWidth;
     private Random random;
     int paddleHitCount;
+
 
     public Ball(Context context){
         ball[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ball0);
@@ -34,8 +37,6 @@ public class Ball {
         ballWidth = ball[0].getWidth();
         ballFrame = 0;
 
-
-
         random = new Random();
         spawn();
     }
@@ -53,51 +54,53 @@ public class Ball {
     }
 
     public void spawn(){
-        ballX = GameView.displayWidth/2 + ballWidth/2;
-        ballY = GameView.displayHeight/2 + ballWidth/2;
+        ballX = GameView.displayWidth/2 - ballWidth/2;
+        ballY = GameView.displayHeight/2 - ballWidth/2;
 
-        ballVelocityY = -1 + random.nextInt(2);
-        if(ballVelocityY == 0)
-            ballVelocityY = 1;
-        ballVelocityX = -3 + random.nextInt(6);
+        int temp = random.nextInt(2);
+        if(temp == 0)
+            ballVelocityY = -10;
+        if(temp == 1)
+            ballVelocityY = 10;
+        ballVelocityX = -15 + random.nextInt(30);
         if(ballVelocityX == 0)
             ballVelocityX = 1;
         paddleHitCount = 0;
 
     }
-
+    //(ballY <= (pad1.paddleY + pad1.getHeight()) && (ballY + getHeight()/2) >= pad1.paddleY) || ballY <= 0
     public void paddleCollision(Paddle pad1, Paddle pad2){
-        if (ballY <= (pad1.paddleY + pad1.getHeight()) && (ballY + getHeight()/2) >= pad1.paddleY) {
+        if (ballY <= pad1.getHeight()) {
             if((ballX + getWidth()/2) >= pad1.paddleX && (ballX + getWidth()/2) <= (pad1.paddleX + pad1.getWidth())){
                 ballY = pad1.paddleY + pad1.getHeight();
                 paddleHitCount++;
-                ballVelocityY = 1 + (paddleHitCount / 3);
-                ballVelocityX = -3 + random.nextInt(6);
+                ballVelocityY = -ballVelocityY +(paddleHitCount / 4);
+                ballVelocityX = -25 + random.nextInt(50) +(paddleHitCount / 4);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
                 if(GameView.sound)
-                    GameView.paddleHitSound.start();
+                    GameView.soundPool.play(GameView.paddleHitSound, 1,1,0,0,1);
             }
         }
-        else if(ballY <= 0) {
+        if(ballY <= 0) {
             pad2.score++;
             spawn();
         }
 
-
-        if ((ballY + getHeight() )>= pad2.paddleY && (ballY + getHeight()/2) <= (pad2.paddleY + pad2.getHeight())) {
+//(ballY + getHeight() )>= pad2.paddleY && (ballY + getHeight()/2) <= (pad2.paddleY + pad2.getHeight())
+        if ((ballY + getHeight()) >= pad2.paddleY) {
             if((ballX + getWidth()/2) >= pad2.paddleX && (ballX + getWidth()/2) <= (pad2.paddleX + pad2.getWidth())){
-                ballY = pad2.paddleY + getHeight();
+                ballY = pad2.paddleY - getHeight();
                 paddleHitCount++;
-                ballVelocityY = - 1 - (paddleHitCount / 3);
-                ballVelocityX = -3 + random.nextInt(6);
+                ballVelocityY = -ballVelocityY - (paddleHitCount / 4);
+                ballVelocityX = -25 + random.nextInt(50) +(paddleHitCount / 4);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
                 if(GameView.sound)
-                    GameView.paddleHitSound.start();
+                    GameView.soundPool.play(GameView.paddleHitSound, 1,1,0,0,1);
             }
         }
-        else if(ballY >= GameView.displayHeight) {
+        if(ballY >= GameView.displayHeight) {
             pad1.score++;
             spawn();
         }

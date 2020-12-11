@@ -16,15 +16,15 @@ public class Paddle {
         paddle = BitmapFactory.decodeResource(context.getResources(), R.drawable.paddle);
         paddleNumber = paddleNum;
         score = 0;
-        paddleVelocity = 3;
+        paddleVelocity = 10;
         paddleWidth = paddle.getWidth();
         paddleHeight = paddle.getHeight();
         paddleX = GameView.displayWidth/2 - paddleWidth/2;
         if (paddleNumber == 1){
-            paddleY = GameView.displayHeight/5;
+            paddleY = 5;
         }
         else if (paddleNumber == 2){
-            paddleY =  (GameView.displayHeight/5)*4 - paddle.getHeight();
+            paddleY =  GameView.displayHeight - paddle.getHeight() -5;
         }
 
     }
