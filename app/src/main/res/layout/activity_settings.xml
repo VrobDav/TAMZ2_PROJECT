@@ -39,7 +39,7 @@
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:onClick="setGameBackgroundImg2"
-        android:src="@drawable/background2"
+        android:src="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.88"

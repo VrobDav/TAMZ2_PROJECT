@@ -62,7 +62,7 @@ public class Ball {
             ballVelocityY = -10;
         if(temp == 1)
             ballVelocityY = 10;
-        ballVelocityX = -15 + random.nextInt(30);
+        ballVelocityX = -10 + random.nextInt(20);
         if(ballVelocityX == 0)
             ballVelocityX = 1;
         paddleHitCount = 0;
@@ -75,7 +75,7 @@ public class Ball {
                 ballY = pad1.paddleY + pad1.getHeight();
                 paddleHitCount++;
                 ballVelocityY = -ballVelocityY +(paddleHitCount / 4);
-                ballVelocityX = -25 + random.nextInt(50) +(paddleHitCount / 4);
+                ballVelocityX = -20 + random.nextInt(40) +(paddleHitCount / 4);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
                 if(GameView.sound)
@@ -93,7 +93,7 @@ public class Ball {
                 ballY = pad2.paddleY - getHeight();
                 paddleHitCount++;
                 ballVelocityY = -ballVelocityY - (paddleHitCount / 4);
-                ballVelocityX = -25 + random.nextInt(50) +(paddleHitCount / 4);
+                ballVelocityX = -20 + random.nextInt(40) +(paddleHitCount / 4);
                 if (ballVelocityX == 0)
                     ballVelocityX = 1;
                 if(GameView.sound)

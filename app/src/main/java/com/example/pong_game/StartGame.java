@@ -12,8 +12,10 @@ public class StartGame extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int i = 1;
         gameView = new GameView(this);
         setContentView(gameView);
 
     }
+
 }

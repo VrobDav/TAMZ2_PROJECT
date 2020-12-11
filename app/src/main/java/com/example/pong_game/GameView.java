@@ -7,9 +7,15 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Insets;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -32,6 +38,7 @@ public class GameView extends View {
 
     static int scoreLimit = 1;
     Bitmap background;
+    Bitmap rotatedPauseImg;
     Rect rect;
     static int displayHeight, displayWidth;
     Handler handler;
@@ -46,11 +53,18 @@ public class GameView extends View {
     int wallHitSound;
     static int paddleHitSound;
     static SoundPool soundPool;
-    int gameStatus = 0;  // 0=stop   1=play  3=game over
+    Paint numberPaint;
+    Paint textPaint;
+    boolean paused = false;
+    private Gyroscope gyroscope;
+    static int gameStatus = 0;  // 0=start of the game/pause   1=play  3=game over
+
 
     public GameView(Context context) {
         super(context);
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background1);
+
+        rotatedPauseImg = BitmapFactory.decodeResource(getResources(), R.drawable.pause1);
 
         preferences = getContext().getSharedPreferences("myPreferences",Context.MODE_PRIVATE);
         String backGround = preferences.getString("backGround","");
@@ -58,7 +72,7 @@ public class GameView extends View {
             background = BitmapFactory.decodeResource(getResources(), R.drawable.background1);
         }
         if(backGround.equals("background2")){
-            background = BitmapFactory.decodeResource(getResources(), R.drawable.background2);
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         }
         String Sound = preferences.getString("sound","");
         if(Sound.equals("true")){
@@ -92,6 +106,14 @@ public class GameView extends View {
         displayWidth = size.x;
         displayHeight = size.y;
 
+        numberPaint = new Paint();
+        numberPaint.setColor(Color.parseColor("#47C1A5"));
+        numberPaint.setTextSize(100);
+
+        textPaint = new Paint();
+        textPaint.setColor(Color.parseColor("#47C1A5"));
+        textPaint.setTextSize(150);
+
         //Log.d("width", String.valueOf(displayWidth));
         //Log.d("height", String.valueOf(displayHeight));
 
@@ -107,6 +129,24 @@ public class GameView extends View {
         paddle2 = new Paddle(context, 2);
         ball = new Ball(context);
 
+        gyroscope = new Gyroscope(context);
+        gyroscope.setListener(new Gyroscope.Listener() {
+            @Override
+            public void onRotation(float rx, float ry, float rz) {
+                if(bot){
+                    if(ry > 0.2f){
+                        if (gameStatus == 1) {
+                            paddle2.movePaddle(GameView.displayWidth);
+                        }
+                    }else if(ry < - 0.2f){
+                        if (gameStatus == 1) {
+                            paddle2.movePaddle(0 );
+                        }
+                    }
+                }
+            }
+        });
+        gyroscope.register();
 
         handler = new Handler(Looper.getMainLooper());
         runnable = new Runnable() {
@@ -136,9 +176,14 @@ public class GameView extends View {
                             paddle1.movePaddle(x);
                     if (y > displayHeight / 2)
                         paddle2.movePaddle(x);
+                    if (x > 0 && x < rotatedPauseImg.getWidth())
+                        if(y > displayHeight/2 - rotatedPauseImg.getHeight()/2 && y < displayHeight/2 + rotatedPauseImg.getHeight()/2) {
+                            gameStatus = 0;
+                            paused = true;
+                        }
                 }
             }
-            if (gameStatus == 0) gameStatus = 1;
+            else if (gameStatus == 0) gameStatus = 1;
 
         }
         return true;
@@ -152,13 +197,24 @@ public class GameView extends View {
 
         canvas.drawBitmap(paddle1.paddle, paddle1.paddleX, paddle1.paddleY, null);
         canvas.drawBitmap(paddle2.paddle, paddle2.paddleX, paddle2.paddleY, null);
+
+        canvas.drawBitmap(rotatedPauseImg, 0, displayHeight/2 - rotatedPauseImg.getHeight()/2, null);
+
+        canvas.drawText(String.valueOf(paddle2.score), displayWidth/2 -20, (displayHeight/3)*2, numberPaint);
+        canvas.save();
+
+        canvas.scale(1f, -1f, displayWidth/2, displayHeight/2);
+        canvas.drawText(String.valueOf(paddle1.score), displayWidth/2 -20, (displayHeight/3)*2, numberPaint);
+        canvas.restore();
+
         canvas.drawBitmap(ball.getBitmap(), ball.ballX, ball.ballY, null);
 
         //Log.d("ballY", String.valueOf(ball.ballY));
         //Log.d("ballX", String.valueOf(ball.ballX));
         if(gameStatus == 0){
-
-
+            if(paused){
+                canvas.drawText("PAUSED", displayWidth/3 - 75, displayHeight/2 + 40, textPaint);
+            }
         }
 
         if(gameStatus == 1) {
@@ -199,6 +255,7 @@ public class GameView extends View {
     public void checkWinner(Paddle pad1, Paddle pad2){
          if(pad1.score == scoreLimit){
              gameStatus = 3;
+             gyroscope.unRegister();
              Intent intent = new Intent(getContext(), WinnerActivity.class);
              intent.putExtra("player", "Player 1");
              getContext().startActivity(intent);
@@ -216,6 +273,7 @@ public class GameView extends View {
     public void checkBotWin(Paddle pad1, Paddle pad2){
         if(pad1.score >= 1){
             gameStatus = 3;
+            gyroscope.unRegister();
             Intent intent = new Intent(getContext(), botEndActivity.class);
             intent.putExtra("score", String.valueOf(pad2.score));
             getContext().startActivity(intent);
