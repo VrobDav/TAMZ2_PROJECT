@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -42,5 +43,12 @@ public class HighScoreActivity extends Activity {
 
     public void goBack(View view){
         finish();
+    }
+
+    public void deleteAll(View view){
+        int nRowDeleted = mydb.removeAll();
+        if(nRowDeleted > 1)
+            Toast.makeText(this, "All records deleted", Toast.LENGTH_SHORT).show();
+        recreate();
     }
 }

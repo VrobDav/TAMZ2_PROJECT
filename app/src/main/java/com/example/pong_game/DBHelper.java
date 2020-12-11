@@ -58,4 +58,20 @@ public class DBHelper extends SQLiteOpenHelper{
 
         return arrayList;
     }
+
+    public int removeAll()
+    {
+        int nRecordDeleted = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db_del = this.getWritableDatabase();
+        Cursor res =  db.rawQuery( "select * from items", null );
+        res.moveToFirst();
+        while(res.isAfterLast() == false){
+            int id = res.getInt(0);
+            db_del.delete("items", "id="+id, null);
+            nRecordDeleted++;
+            res.moveToNext();
+        }
+        return nRecordDeleted;
+    }
 }

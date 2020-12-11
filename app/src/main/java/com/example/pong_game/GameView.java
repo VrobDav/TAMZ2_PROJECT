@@ -57,7 +57,7 @@ public class GameView extends View {
     Paint textPaint;
     boolean paused = false;
     private Gyroscope gyroscope;
-    static int gameStatus = 0;  // 0=start of the game/pause   1=play  3=game over
+    static int gameStatus = 0;  // 0=start of the game/pause   1=play
 
 
     public GameView(Context context) {
@@ -254,7 +254,8 @@ public class GameView extends View {
 
     public void checkWinner(Paddle pad1, Paddle pad2){
          if(pad1.score == scoreLimit){
-             gameStatus = 3;
+             gameStatus = 0;
+             paused = false;
              gyroscope.unRegister();
              Intent intent = new Intent(getContext(), WinnerActivity.class);
              intent.putExtra("player", "Player 1");
@@ -262,7 +263,9 @@ public class GameView extends View {
 
          }
          if(pad2.score == scoreLimit){
-             gameStatus = 3;
+             gameStatus = 0;
+             paused = false;
+             gyroscope.unRegister();
              Intent intent = new Intent(getContext(), WinnerActivity.class);
              intent.putExtra("player", "Player 2");
              getContext().startActivity(intent);
@@ -272,11 +275,13 @@ public class GameView extends View {
 
     public void checkBotWin(Paddle pad1, Paddle pad2){
         if(pad1.score >= 1){
-            gameStatus = 3;
+            gameStatus = 0;
+            paused = false;
             gyroscope.unRegister();
             Intent intent = new Intent(getContext(), botEndActivity.class);
             intent.putExtra("score", String.valueOf(pad2.score));
             getContext().startActivity(intent);
+
 
         }
     }
