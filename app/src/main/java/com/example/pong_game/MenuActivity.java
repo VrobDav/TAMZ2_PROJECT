@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class MenuActivity extends Activity {
 
     TextView scoreLimitTextView;
-
+    int currentLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,8 @@ public class MenuActivity extends Activity {
 
         scoreLimitTextView = findViewById(R.id.scoreLimitTextView);
         scoreLimitTextView.setText("1");
+        currentLimit = Integer.parseInt(scoreLimitTextView.getText().toString());
+        GameView.setScoreLimit(currentLimit);
     }
 
     public void startGame2Players(View view){
@@ -38,7 +40,7 @@ public class MenuActivity extends Activity {
     }
 
     public void riseScoreLimit(View view){
-        int currentLimit = Integer.parseInt(scoreLimitTextView.getText().toString());
+        currentLimit = Integer.parseInt(scoreLimitTextView.getText().toString());
         currentLimit++;
         if(currentLimit > 100){
             currentLimit = 100;
@@ -48,7 +50,7 @@ public class MenuActivity extends Activity {
     }
 
     public void lowerScoreLimit(View view){
-        int currentLimit = Integer.parseInt(scoreLimitTextView.getText().toString());
+        currentLimit = Integer.parseInt(scoreLimitTextView.getText().toString());
         currentLimit--;
         if(currentLimit < 1){
             currentLimit = 1;
