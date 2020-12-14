@@ -56,7 +56,7 @@ public class GameView extends View {
     Paint numberPaint;
     Paint textPaint;
     boolean paused = false;
-    private Gyroscope gyroscope;
+
     static int gameStatus = 0;  // 0=start of the game/pause   1=play
 
 
@@ -129,24 +129,6 @@ public class GameView extends View {
         paddle2 = new Paddle(context, 2);
         ball = new Ball(context);
 
-        gyroscope = new Gyroscope(context);
-        gyroscope.setListener(new Gyroscope.Listener() {
-            @Override
-            public void onRotation(float rx, float ry, float rz) {
-                if(bot){
-                    if(ry > 0.2f){
-                        if (gameStatus == 1) {
-                            paddle2.movePaddle(GameView.displayWidth);
-                        }
-                    }else if(ry < - 0.2f){
-                        if (gameStatus == 1) {
-                            paddle2.movePaddle(0 );
-                        }
-                    }
-                }
-            }
-        });
-        gyroscope.register();
 
         handler = new Handler(Looper.getMainLooper());
         runnable = new Runnable() {
@@ -256,7 +238,6 @@ public class GameView extends View {
          if(pad1.score == scoreLimit){
              gameStatus = 0;
              paused = false;
-             gyroscope.unRegister();
              Intent intent = new Intent(getContext(), WinnerActivity.class);
              intent.putExtra("player", "Player 1");
              getContext().startActivity(intent);
@@ -265,7 +246,6 @@ public class GameView extends View {
          if(pad2.score == scoreLimit){
              gameStatus = 0;
              paused = false;
-             gyroscope.unRegister();
              Intent intent = new Intent(getContext(), WinnerActivity.class);
              intent.putExtra("player", "Player 2");
              getContext().startActivity(intent);
@@ -277,7 +257,6 @@ public class GameView extends View {
         if(pad1.score >= 1){
             gameStatus = 0;
             paused = false;
-            gyroscope.unRegister();
             Intent intent = new Intent(getContext(), botEndActivity.class);
             intent.putExtra("score", String.valueOf(pad2.score));
             getContext().startActivity(intent);
